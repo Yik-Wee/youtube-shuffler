@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
+:root {
+    font-size: 16px;
+    font-family: 'Open Sans';
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+#foot {
+    bottom: 1rem;
+    position: fixed;
+    right: 1rem;
+    /* padding: 1rem; */
+    /* visibility: hidden; */
+}
