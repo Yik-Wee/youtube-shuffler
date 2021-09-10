@@ -3,10 +3,12 @@ import { Paper, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles({
     root: {
+        // position: 'relative',
+        paddingTop: '35vh',
         display: 'flex', 
         flexDirection: 'column',
         justifyContent: 'center',
-        paddingTop: '15vh',
+        // paddingTop: '25vh',
     },
 })
 

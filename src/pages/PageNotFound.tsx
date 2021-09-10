@@ -5,7 +5,7 @@ const useStyles = makeStyles({
         display: 'flex', 
         flexDirection: 'column',
         justifyContent: 'center',
-        paddingTop: '15vh',
+        paddingTop: '35vh',
     },
 })
 

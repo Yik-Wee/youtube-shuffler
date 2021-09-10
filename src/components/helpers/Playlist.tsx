@@ -1,4 +1,3 @@
-// import { shuffle } from './Shuffle';
 import { player } from './PlayerAPI';
 
 interface VideoType {
@@ -12,16 +11,18 @@ class Playlist {
     videos: VideoType[];
     curIdx: number;
     size: number;
-    isPaused: boolean;
 
-    constructor(videos: VideoType[]) {
+    constructor(videos: VideoType[] = [{ id: '', title: '', channel: '', thumbnail: '' }]) {
         this.videos = videos;
         this.size = videos.length;
         this.curIdx = 0;
-        this.isPaused = true;
     }
 
-    shuffle(videos: VideoType[] = this.videos) {  // TODO write shuffle code here instead save 1 file
+    isEmpty() {
+        return this.videos[0].id === '';
+    }
+
+    shuffle(videos: VideoType[] = this.videos) {
         [this.videos[0], this.videos[this.curIdx]] = [this.videos[this.curIdx], this.videos[0]]  // make cur video first vid of playlist
         
         for (let i = 1; i < videos.length; i++) {  // shuffle
@@ -30,22 +31,6 @@ class Playlist {
         }
 
         this.curIdx = 0;
-    }
-
-    get allData() {
-        var ids: string[] = [];
-        var titles: string[] = [];
-        var channels: string[] = [];
-        var thumbnails: string[] = [];
-
-        this.videos.forEach((vid: VideoType) => {
-            ids.push(vid['id']);
-            titles.push(vid['title']);
-            channels.push(vid['channel']);
-            thumbnails.push(vid['thumbnail']);
-        })
-
-        return [ids, titles, channels, thumbnails];
     }
 
     getData(type: string) {
@@ -90,7 +75,12 @@ class Playlist {
 
     load(videoID: string) {
         const idx = this.getData('id').indexOf(videoID);
-        if (idx === -1) return console.log('INVALID VIDEO ID');
+        
+        if (idx === -1) {
+            console.log(this.videos);
+            console.log(videoID, "not in playlist");
+            return;
+        }
 
         this.curIdx = idx;
         player.loadVideoById(videoID);
@@ -99,24 +89,56 @@ class Playlist {
     pause() {
         player.pauseVideo();
         document.title = 'YouTube Shuffler';
-        this.isPaused = true;
     }
 
     play() {
-        const nowPlaying = document.getElementById("now-playing");
+        const videoTitle = document.getElementById("video-title");
+        const videoChannel = document.getElementById("video-channel");
+
         const curVideo = this.curVideo;
         const title = curVideo?.title;
         const channel = curVideo?.channel;
 
-        if (nowPlaying && title) { 
-            nowPlaying.textContent = `Now Playing: ${title} · ${channel}`;
+        if (videoTitle && videoChannel && title && channel) { 
+            videoChannel.textContent = channel
+            videoTitle.textContent = title;
             document.title = `${title} · ${channel}`;
         }
 
         player.playVideo();
-        this.isPaused = false;
     }
 }
 
+const global = {
+    curPlaylist: new Playlist()
+}
+
+function setCurPlaylist(pl: Playlist) {
+    global.curPlaylist = pl;
+}
+
+function getCurPlaylist() {
+    return global.curPlaylist;
+}
+
+
+
+// get allData() {
+//     var ids: string[] = [];
+//     var titles: string[] = [];
+//     var channels: string[] = [];
+//     var thumbnails: string[] = [];
+
+//     this.videos.forEach((vid: VideoType) => {
+//         ids.push(vid['id']);
+//         titles.push(vid['title']);
+//         channels.push(vid['channel']);
+//         thumbnails.push(vid['thumbnail']);
+//     })
+
+//     return [ids, titles, channels, thumbnails];
+// }
+
 export default Playlist;
 export type { VideoType };
+export { setCurPlaylist, getCurPlaylist };

@@ -1,5 +1,4 @@
-// import { playVideo } from './Controls';
-import { getCurPlaylist } from '../globals/index';
+import Playlist, { getCurPlaylist } from '../helpers/Playlist';
 
 declare global {
     interface Window {

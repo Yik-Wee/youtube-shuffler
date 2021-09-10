@@ -2,15 +2,13 @@ import { Paper, Typography } from "@material-ui/core"
 import { ClassNameMap } from "@material-ui/core/styles/withStyles"
 
 interface PlaylistBodyProps {
-    title: string;
     videos: JSX.Element[];
-    classes: ClassNameMap<string>;
+    className: string | undefined;
 }
 
-const PlaylistBody: React.FC<PlaylistBodyProps> = ({ title, videos, classes }) => {
+const PlaylistBody: React.FC<PlaylistBodyProps> = ({ videos, className }) => {
     return (
-        <Paper className={classes.body}>
-            <Typography variant="overline">{ title }</Typography>
+        <Paper className={className}>
             { videos }
         </Paper>
     )

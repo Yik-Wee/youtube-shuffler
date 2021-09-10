@@ -19,7 +19,7 @@ class Search extends React.Component<SearchProps, { value: string }> {
 
     handleSubmit(event: React.ChangeEvent<HTMLFormElement>) {
         console.log(this.state.value);
-        this.props.history.push(`/search?q=${this.state.value}`);
+        this.props.history.push(`/playlist?id=${this.state.value}`);
         event.preventDefault();
     }
 

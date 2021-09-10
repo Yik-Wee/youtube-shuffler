@@ -1,65 +1,66 @@
 import React from 'react';
-import { Grid, makeStyles, Typography } from '@material-ui/core';
-import { PauseCircleFilledRounded, PlayCircleFilledRounded, SkipNextRounded, SkipPreviousRounded } from '@material-ui/icons';
-import { setCurPlaylist, getCurPlaylist } from '../globals';
-// import { useState } from 'react';
+import { Grid, makeStyles, Paper, Typography } from '@material-ui/core';
+import { SkipNextRounded, SkipPreviousRounded } from '@material-ui/icons';
+import { getCurPlaylist } from '../helpers/Playlist';
 
 const useStyles = makeStyles({
     root: {
         position: 'fixed',
-        bottom: '0',
-        height: '5rem',
-        width: '100%',
+        zIndex: 2,
+        top: '10vh',
+        height: '25vh',
+        width: '100vw',
+        display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
-        padding: '1rem',
-        // backgroundColor: '#181818'
+        // padding: '1rem',
+        alignItems: 'center'
     },
     nowPlaying: {
-        width: '25vw',
-        height: '75%',
-        wordWrap: 'break-word',
-        // overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
         textOverflow: 'ellipsis'
+    },
+    item: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '40vh',
+        columnGap: '3ch',
+        width: '100%'
+    },
+    button: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        columnGap: '3ch',
     }
 });
 
-interface NowPlayingBarProps {
-    darkMode: boolean
-}
-
-const NowPlayingBar: React.FC<NowPlayingBarProps> = ({ darkMode }) => {
+const NowPlayingBar: React.FC = () => {
     const classes = useStyles();
-    const bgColor = darkMode ? "#181818" : "#8899A6";
-    // const [circle, setCircle] = useState(<PlayCircleFilledRounded />);
-    // TODO setstate for isPaused - onClick change PauseCircle to PlayCircle and vice verse
+    // const bgColor = darkMode ? "#181818" : "#8899A6";
 
     return (
-        <div className={classes.root} style={{ backgroundColor: bgColor }}>
-            <Grid style={{ justifyContent: 'left' }} container>
-                <Grid item xs>
-                    <div id="now-playing" className={classes.nowPlaying}></div>
-                    {/* <Typography id="now-playing" className={classes.nowPlaying} variant="overline"> */}
-                    {/* </Typography> */}
-                </Grid>
-                <Grid style={{ justifyContent: 'center', position: 'fixed' }} container spacing={3}>
-                    <Grid item xs={1}>
+        <div className={classes.root}>
+            <Paper className={classes.item}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                    <Typography id="video-channel" variant="h6" className={classes.nowPlaying}></Typography>
+                    <Typography id="video-title" variant="h6" className={classes.nowPlaying}></Typography>
+                    <Paper className={classes.button}>
                         <SkipPreviousRounded fontSize="large" onClick={() => getCurPlaylist().playPrev()} />
-                    </Grid>
-                    <Grid item xs={1}>
-                        <PauseCircleFilledRounded fontSize="large" onClick={() => {
-                            getCurPlaylist().isPaused ? getCurPlaylist().play() : getCurPlaylist().pause();
-                        }}/>
-                        {/* {
-                        Global.curPlaylist.isPaused ? 
-                        <PlayCircleFilledRounded fontSize="large" onClick={() => Global.curPlaylist.play()}/> : 
-                        <PauseCircleFilledRounded fontSize="large" onClick={() => Global.curPlaylist.pause()} />
-                        } */}
-                    </Grid>
-                    <Grid item xs={1}>
                         <SkipNextRounded fontSize="large" onClick={() => getCurPlaylist().playNext()} />
-                    </Grid>
-                </Grid>
-            </Grid>
+                    </Paper>
+                </div>
+
+                <iframe 
+                    id="player" 
+                    src="https://www.youtube.com/embed/?enablejsapi=1" 
+                    style={{ position: 'relative', zIndex: 1, border: 0, width: "50%", height: "90%" }}
+                ></iframe>
+            </Paper>
         </div>
     );
 }

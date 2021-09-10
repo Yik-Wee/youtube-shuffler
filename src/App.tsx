@@ -2,52 +2,62 @@ import { HashRouter, Route, Switch } from 'react-router-dom';
 import NowPlayingBar from './components/foot/NowPlayingBar';
 import NavBar from './components/navbar/navbar'
 import Home from './pages/Home';
-import Playlist from './pages/Playlist'
-import Settings from './pages/Settings';
 import PageNotFound from './pages/PageNotFound';
-import Mix from './pages/Mix';
-import Search from './pages/Search/Search';
+import SearchPlaylist from './pages/SearchPlaylist/SearchPlaylist';
 import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme, CssBaseline, Theme } from '@material-ui/core';
-import { useState } from 'react';
-import { player } from './components/helpers/PlayerAPI';
-import PlaylistObj from './components/helpers/Playlist';
+import Playlist, { setCurPlaylist } from './components/helpers/Playlist';
+import VideoQueue from './pages/VideoQueue';
+import React from 'react';
+// import PlaylistCard from './pages/SearchPlaylist/PlaylistCard';
 
-function App() {
-    console.log(player);
-    
-    // TODO
-    // const defaultPlaylist = new PlaylistObj([{
-    //     id: '', title: '', channel: '', thumbnail: ''
-    // }]);
-    // const [playlist, setPlaylist] = useState(defaultPlaylist);
+class App extends React.Component<{}, { darkMode: boolean, shouldUpdate: boolean }> {
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            darkMode: true,
+            shouldUpdate: true
+        }
+    }
 
-    const curTheme = localStorage.getItem("appTheme");
-    const [darkMode, setDarkMode] = useState(curTheme === "dark");
+    setDarkMode(darkMode: boolean) {
+        this.setState({
+            darkMode: darkMode,
+            shouldUpdate: true
+        });
+    }
 
-    const theme: Theme = createMuiTheme({
-        palette: {
-            type: darkMode ? 'dark' : 'light'
-        },
-    })
+    render() {
+        const theme: Theme = createMuiTheme({
+            palette: {
+                type: this.state.darkMode ? 'dark' : 'light'
+            },
+        })
 
-    return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <HashRouter>
-            <NavBar  darkMode={darkMode} />
-                <Switch>
-                    <Route exact path='/' component={Home} />
-                    <Route exact path='/playlist' component={Playlist} />
-                    <Route exact path='/mix' component={Mix} />
-                    <Route exact path='/settings' component={() => <Settings darkMode={darkMode} themeSetter={setDarkMode} />} />
-                    <Route exact path='/search' component={() => <Search darkMode={darkMode} />} />
-                    <Route component={PageNotFound} />
-                </Switch>
-            </HashRouter>
-            <NowPlayingBar darkMode={darkMode} />
-        </ThemeProvider>
-    );
+        return (
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <HashRouter>
+                    <NavBar darkMode={this.state.darkMode} themeSetter={this.setDarkMode.bind(this)} />
+                    <NowPlayingBar />
+                    <Switch>
+                        <Route exact path='/' component={Home} />
+                        <Route exact path='/playlist'
+                            component={() =>
+                                <SearchPlaylist
+                                    darkMode={this.state.darkMode}
+                                    setCurPlaylist={(p: Playlist) => setCurPlaylist(p)}
+                                />
+                                // <PlaylistCard />
+                            }
+                        />
+                        <Route exact path='/queue' component={() => <VideoQueue />} />
+                        <Route component={PageNotFound} />
+                    </Switch>
+                </HashRouter>
+            </ThemeProvider>
+        )
+    }
 }
 
 export default App;
