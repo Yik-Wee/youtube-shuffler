@@ -64,7 +64,7 @@ const VideoQueue: React.FC<VideoQueueProps> = ({ darkMode }) => {
     return (
         <div className={classes.root}>
             <Paper style={{ padding: '1rem' }}>
-                <Typography variant="h3">Queue</Typography>
+                <Typography variant="h3" style={{ overflowX: 'scroll' }}>Queue</Typography>
                 {loading ? <LoadingBar /> : (
                     noPlaylist ? 
                         <Typography variant="overline">No playlist yet! Search for a playlist to get started!</Typography> : 

@@ -50,7 +50,7 @@ const RecentPlaylistCard: React.FC<RPCProps> = ({ id, title, channel, thumbnail,
     const classes = useStyles(darkMode);
     const history = useHistory();
 
-    return (  // TODO
+    return (
         <Paper className={classes.playlistCard}>
             <Grid
                 container
@@ -59,10 +59,8 @@ const RecentPlaylistCard: React.FC<RPCProps> = ({ id, title, channel, thumbnail,
                 alignItems="center"
                 spacing={3}
                 onClick={() => {
-                // set current playlist to playlist clicked
-                setSearchedID(id);
-                // go to queue
-                history.push('/queue');
+                setSearchedID(id);  // set current playlist to playlist clicked
+                history.push('/queue');  // go to queue
             }}>
                 <Grid item xs={4}>
                     {thumbnail ? <img 

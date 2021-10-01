@@ -1,7 +1,7 @@
 import { makeStyles, Paper, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from "react";
 import { getPlaylistMainInfo } from '../components/helpers/GetPlaylistInfo';
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { YouTube } from '@material-ui/icons';
 import { store } from '../components/globalStateHandler';
 

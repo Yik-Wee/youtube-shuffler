@@ -1,37 +1,17 @@
 import { store } from '../globalStateHandler/';
+import ReactDOM from 'react-dom';
+import { PauseCircleOutlineRounded, PlayCircleOutlineRounded } from '@material-ui/icons';
+import { PlayerEvent, Player, PlayerState } from './IPlayerAPI';
 
-declare global {
-    interface Window {
-        onYouTubeIframeAPIReady: Function;
-        YT: any;
-    }
-}
-
-(() => {
+(() => {  // creating script tag for player api
     var tag = document.createElement('script');
     tag.src = 'https://www.youtube.com/iframe_api';
     var firstScriptTag = document.getElementsByTagName('script')[0];
     if (firstScriptTag?.parentNode) firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 })();
 
-type IFrameEvent = {
-    data: number;
-    target: {
-        playVideo: Function
-    };
-};
-
-enum PlayerState {
-    UNSTARTED = -1,
-    ENDED,
-    PLAYING,
-    PAUSED,
-    BUFFERING,
-    VIDEO_CUED,
-}
-
-
-var player: any;
+// initialise youtube player
+var player: Player;
 
 (() => {
     window.onYouTubeIframeAPIReady = () => {
@@ -44,38 +24,62 @@ var player: any;
         });
     };
 
-    function onPlayerReady(event: IFrameEvent) {
+    // initialise player events
+    function onPlayerReady(event: PlayerEvent) {
         event.target.playVideo();
     }
 
-    function onPlayerError(err: Error) {
-        console.log('ERROR', err);
+    function onPlayerError(event: PlayerEvent) {
+        console.warn(event);
+        store.state.playlist.playNext();
     }
 
-    function onPlayerStateChange(event: IFrameEvent) {  // play next video when ended
-        console.log({ data: event.data });
-
-        switch (event.data) {  //TODO
-            case PlayerState.ENDED:
+    function onPlayerStateChange(event: PlayerEvent) {  // play next video when ended
+        switch (event.data) {
+            case PlayerState.ENDED:  // current video ended, play next video in playlist
                 store.state.playlist.playNext();
                 break;
-        
+
             case PlayerState.PLAYING:
                 store.state.playlist.paused = false;
-                // console.log(document.getElementById('play-pause'))
-                // document.getElementById('play-pause')?.click();
+                const currentVideo = store.state.playlist.currentVideo();
+                
+                if (currentVideo.title && currentVideo.channel)
+                    document.title = `${currentVideo.title} · ${currentVideo.channel}`;
+
+                if (currentVideo.id)
+                    localStorage.setItem('mostRecentVideo', currentVideo.id);
+
+                // change play button to pause button
+                ReactDOM.render(
+                    <PauseCircleOutlineRounded
+                        id="pause"
+                        style={{ width: '2rem', height: '2rem' }}
+                        onClick={() => store.state.playlist.pause()}
+                    />,
+                    document.getElementById('play-pause-button')
+                );
                 break;
-            
+
             case PlayerState.PAUSED:
                 store.state.playlist.paused = true;
-                // console.log(document.getElementById('play-pause'))
-                // document.getElementById('play-pause')?.click();
+                document.title = 'YouTube Shuffler'
+
+                // change pause button to play button
+                ReactDOM.render(
+                    <PlayCircleOutlineRounded
+                        id="play"
+                        style={{ width: '2rem', height: '2rem' }}
+                        onClick={() => store.state.playlist.play()}
+                    />,
+                    document.getElementById('play-pause-button')
+                );
                 break;
 
             default:
                 break;
         }
     }
-})();
+})()
 
 export { player };

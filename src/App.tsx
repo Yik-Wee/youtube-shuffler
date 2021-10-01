@@ -1,6 +1,6 @@
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import NowPlayingBar from './components/NowPlayingBar';
-import NavBar from './components/navbar/navbar';
+import NavBar from './components/navbar';
 import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme, CssBaseline } from '@material-ui/core';
 import { Home, PageNotFound, SearchPlaylist, Settings, VideoQueue } from './pages';

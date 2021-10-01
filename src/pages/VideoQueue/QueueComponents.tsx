@@ -1,57 +1,8 @@
 import { ShuffleRounded } from "@material-ui/icons";
 import { useState } from "react";
 import { store } from "../../components/globalStateHandler";
-import { Grid, Paper, Button } from "@material-ui/core";
-import Playlist, { VideoType } from "../../components/helpers/Playlist";
+import { Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
-
-function onVideoClick(playlist: Playlist, videoID: string, videoTitle: string = '') {
-    console.log(`Video ID: ${videoID}\nVideo Title: ${videoTitle}`);
-    playlist.load(videoID);
-    playlist.play();
-}
-
-const NoOverflowDiv: React.FC<{ text: string, width?: string }> = ({ text, width }) => {
-    return (
-        <div style={{ width: width || "auto", overflow: 'hidden', textOverflow: "ellipsis", whiteSpace: 'nowrap', }}>
-            { text }
-        </div>
-    )
-}
-
-interface VideoProps {
-    video: VideoType;
-    className: string | undefined;
-    playlist: Playlist;
-}
-
-const VideoCard: React.FC<VideoProps> = ({ video, className, playlist }) => {
-    const { id, title, channel, thumbnail } = video;
-    
-    return (
-        <Paper className={className} onClick={() => onVideoClick(playlist, id, title)}>
-            <Grid
-                container
-                direction="row"
-                justify="flex-start"
-                alignItems="center"
-                spacing={3}
-            >
-                <Grid item xs={3}>
-                    <img src={thumbnail} alt={`${title} by ${channel}`} width='50rem' height='30rem' />
-                </Grid>
-                <Grid item xs={4}>
-                    <NoOverflowDiv text={title} />
-                </Grid>
-                <Grid item xs={4}>
-                    <NoOverflowDiv text={channel} />
-                </Grid>
-            </Grid>
-        </Paper>
-    )
-}
-
-
 
 const useClasses = (darkMode: boolean) => {
     const useStyles = makeStyles({
@@ -100,4 +51,4 @@ const PlaylistBody: React.FC<PlaylistBodyProps> = ({ darkMode }) => {
     )
 }
 
-export { PlaylistBody, VideoCard }
+export { PlaylistBody }

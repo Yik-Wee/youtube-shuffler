@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles, Paper, Typography } from '@material-ui/core';
-import { PauseCircleOutlineRounded, PlayCircleOutlineRounded, SkipNextRounded, SkipPreviousRounded } from '@material-ui/icons';
+import { SkipNextRounded, SkipPreviousRounded } from '@material-ui/icons';
 import { store } from './globalStateHandler';
 
 const useStyles = makeStyles({
@@ -36,9 +36,7 @@ const useStyles = makeStyles({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        // width: '40vw',
         columnGap: '2ch',
-        //TODO OnHover
     },
     item: {
         display: 'flex',
@@ -57,7 +55,8 @@ const useStyles = makeStyles({
 
 const NowPlayingBar: React.FC = () => {
     const classes = useStyles();
-    const [paused, setPaused] = useState(store.state.playlist.paused);
+    const defaultVideoID = localStorage.getItem('mostRecentVideo') || 'dQw4w9WgXcQ';
+    console.log(document.domain);
 
     return (
         <div className={classes.root}>
@@ -67,7 +66,7 @@ const NowPlayingBar: React.FC = () => {
                     <Typography id="video-title" variant="h6" className={classes.nowPlaying}></Typography>
                     <Paper className={classes.buttonGroup}>
                         <PrevButton />
-                        <PlayPauseButton paused={paused} setPaused={setPaused} />
+                        <div id="play-pause-button"></div>
                         <NextButton />
                     </Paper>
                 </div>
@@ -76,7 +75,7 @@ const NowPlayingBar: React.FC = () => {
                     className={classes.iframe}
                     title="YouTube Player"
                     id="player"
-                    src="https://www.youtube.com/embed/?enablejsapi=1" 
+                    src={`https://www.youtube.com/embed/${defaultVideoID}?enablejsapi=1&widgetid=1`}
                 ></iframe>
             </Paper>
         </div>
@@ -92,25 +91,6 @@ const PrevButton: React.FC = () => {
 const NextButton: React.FC = () => {
     return (
         <SkipNextRounded id="play-next" style={{ width: '2rem', height: '2rem' }} onClick={() => store.state.playlist.playNext()} />
-    )
-}
-
-const PlayPauseButton: React.FC<{ paused: boolean, setPaused: Function }> = ({ paused, setPaused }) => {
-    return (
-        // <Button size="small" style={{ width: '2rem', height: '2rem' }}>
-        <>
-            {paused ?
-                <PlayCircleOutlineRounded id="play-pause" style={{ width: '2rem', height: '2rem' }} onClick={() => {
-                    store.state.playlist.play();
-                    setPaused(false);
-                }} />:
-                <PauseCircleOutlineRounded id="play-pause" style={{ width: '2rem', height: '2rem' }} onClick={() => {
-                    store.state.playlist.pause()
-                    setPaused(true);
-                }} />
-            }
-        </>
-        // </Button>
     )
 }
 
