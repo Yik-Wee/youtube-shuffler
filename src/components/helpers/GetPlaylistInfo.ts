@@ -2,8 +2,12 @@ import { VideoType } from './Playlist';
 import Playlist from './Playlist';
 import { PlaylistData } from './PlaylistDataTypes';
 
-export async function getPlaylistTitle(id: string) {
-    /* Returns [channel, title] of playlist with id of `id` */
+/**
+ * 
+ * @param id ID of playlist to fetch
+ * @returns string[] of [channel, title, thumbnail] of playlist
+ */
+async function getPlaylistMainInfo(id: string) {
     const API_KEY = process.env.REACT_APP_API_KEY;
     let channel: string = "";
     let title: string = "";
@@ -12,16 +16,19 @@ export async function getPlaylistTitle(id: string) {
 
     await fetch(url, { method: 'GET' })
         .then(res => {
-            if (res.ok) return res.json();
-            throw new Error("Error fetching Playlist title");
+            if (!res.ok)
+                throw new Error("Error fetching Playlist channel, title, thumbnail");
+            
+            return res.json();
         })
         .then(data => {
-            console.log(data);
             channel = data.items[0].snippet.channelTitle;
             title = data.items[0].snippet.localized.title;
-            thumbnail = data.items[0].snippet.thumbnails.default.url;
+
+            const thumbnails = data.items[0].snippet.thumbnails
+            const resolution = thumbnails.medium || thumbnails.default || thumbnails.standard || thumbnails.high || thumbnails.maxres || { url: null };
+            thumbnail = resolution.url;
         })
-        .catch(_ => console.clear());
 
     return [channel, title, thumbnail];
 }
@@ -39,41 +46,66 @@ async function getPageVideos(url: string, pageToken: string | undefined) {
         .then(data => {
             retData = data;
         })
-        .catch(_ => console.clear());
+        .catch(err => console.log(err));
 
     return retData;
 }
 
-// TODO get rid of any type pls
-export async function getPlaylistVideos(playlistID: string) {
+async function getPlaylistVideos(playlistID: string) {
+    console.log("getting playlist videos");
+    
     const API_KEY = process.env.REACT_APP_API_KEY;
+    const url: string = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=5000&playlistId=${playlistID}&key=${API_KEY}`;
+    
     let videos: VideoType[] = [];
     let nextPageToken: string | undefined = '';
-    const url: string = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=5000&playlistId=${playlistID}&key=${API_KEY}`;
+
+    const loadingBar: HTMLElement | null = document.getElementById('loading-bar');
+    let bar = ''
 
     do {
+        // increment loading bar
+        bar += '▨';
+        if (loadingBar)
+            loadingBar.textContent = bar + '▢';
+
         const data: any = await getPageVideos(url, nextPageToken);
 
-        const items = data.items;
+        // validate
+        if (!data)
+            throw new Error('INVALID PLAYLIST ID');
+        
+        if (data?.error || !data.items)
+            throw new Error('MAX API CALLS REACHED');
+
         nextPageToken = data.nextPageToken;
 
-        if (data.error || !items) throw new Error('INVALID PLAYLIST ID or MAX API CALLS REACHED');
-
-        items.forEach((item: any) => {
-            const spt = item.snippet;
-            const thumbnail = spt.thumbnails.medium;
-
+        data.items.forEach((item: any) => {  // add each video data to videos
+            const titleUpper: string = item.snippet.title.toUpperCase();
+            if (titleUpper === 'PRIVATE VIDEO' || titleUpper === 'DELETED VIDEO') return;
+            
+            const thumbnails = item.snippet.thumbnails;
+            const resolution = thumbnails.medium || thumbnails.default || thumbnails.standard || thumbnails.high || thumbnails.maxres || { url: null };
+            
             videos.push({
-                id: spt.resourceId.videoId,
-                title: spt.title,
-                channel: spt.videoOwnerChannelTitle,
-                thumbnail: thumbnail ? thumbnail.url : null
+                id: item.snippet.resourceId.videoId,
+                title: item.snippet.title,
+                channel: item.snippet.videoOwnerChannelTitle,
+                thumbnail: resolution.url
             });
         });
 
     } while (nextPageToken !== undefined)
 
-    return new Playlist(videos);
+    return videos;
+    // return new Playlist(videos);
+}
+
+async function getPlaylist(id: string) {
+    const [channel, title, thumbnail] = await getPlaylistMainInfo(id);
+    const videos = await getPlaylistVideos(id);
+    return new Playlist(videos, channel, title, thumbnail, id);
 }
 
 export default getPlaylistVideos;
+export { getPlaylistMainInfo, getPlaylistVideos, getPlaylist }

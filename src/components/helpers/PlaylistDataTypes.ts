@@ -1,36 +1,53 @@
-// TODO this has more stuff just add it
 export interface PlaylistData {
-    nextPageToken?: string;
+    etag?: string;
     items?: Item[];
+    kind?: string;
+    pageInfo?: {
+        resultsPerPage: number;
+        totalResults: number;
+    }
+    nextPageToken?: string;
     error?: {
         code: number;
     }
 }
 
-// TODO this too i think
-interface Item extends Array<object> {
-    kind: string;
+interface Item {
     etag: string;
     id: string;
+    kind: string;
     snippet: Snippet;
 }
 
 interface Snippet {
-    resourceId: {
-        videoId: string;
-    };
-    thumbnails: {
-        default: Thumbnail,
-        medium: Thumbnail
-        high: Thumbnail
-    };
-    title: string;
-    videoOwnerChannelTitle: string;
+    channelId: string;
     channelTitle: string;
+    description: string;
+    playlistId: string;
+    position: number;
+    publishedAt: string;
+    resourceId: ResourceId;
+    thumbnails?: Thumbnails;
+    title: string;
+    videoOwnerChannelId: string;
+    videoOwnerChannelTitle: string;
+}
+
+interface ResourceId {
+    kind: string;
+    videoId: string;
+}
+
+interface Thumbnails {
+    default?: Thumbnail;
+    high?: Thumbnail;
+    maxres?: Thumbnail;
+    medium?: Thumbnail;
+    standard?: Thumbnail;
 }
 
 interface Thumbnail {
-    url: string,
-    width: number,
     height: number
+    width: number,
+    url: string,
 }

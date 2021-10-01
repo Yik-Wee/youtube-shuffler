@@ -1,3 +1,4 @@
+import { VideoCard } from '../../pages/VideoQueue/QueueComponents';
 import { player } from './PlayerAPI';
 
 interface VideoType {
@@ -7,19 +8,32 @@ interface VideoType {
     thumbnail: string;
 }
 
-class Playlist {
-    videos: VideoType[];
-    curIdx: number;
-    size: number;
+const defaultVideo = { id: '', title: '', channel: '', thumbnail: '' };
 
-    constructor(videos: VideoType[] = [{ id: '', title: '', channel: '', thumbnail: '' }]) {
+class Playlist {
+    private videos: VideoType[];
+    private curIdx: number;
+    public length: number;
+    public paused: boolean;
+    channel: string;
+    title: string;
+    thumbnail: string;
+    id: string;
+
+    constructor(videos: VideoType[] = [defaultVideo], channel='', title='', thumbnail='', id='') {
         this.videos = videos;
-        this.size = videos.length;
+        this.length = videos.length;
         this.curIdx = 0;
+        this.paused = true;
+
+        this.channel = channel;
+        this.title = title;
+        this.thumbnail = thumbnail;
+        this.id = id;
     }
 
     isEmpty() {
-        return this.videos[0].id === '';
+        return this.videos[0] === defaultVideo;
     }
 
     shuffle(videos: VideoType[] = this.videos) {
@@ -42,24 +56,24 @@ class Playlist {
 
         var ids: string[] = [];
 
-        for (let i = 0; i < this.size; i++) {
+        for (let i = 0; i < this.length; i++) {
             ids.push(this.videos[i][type]);
         }
 
         return ids;
     }
 
-    get curVideo() {
+    currentVideo() {
         return this.videos[this.curIdx];
     }
 
     playNext() {
-        if (this.curIdx + 1 >= this.size) {
+        if (this.curIdx + 1 >= this.length) {
             return console.log("Last video reached");
         }
 
         this.curIdx++;
-        this.load(this.curVideo.id);
+        this.load(this.currentVideo().id);
         this.play();
     }
 
@@ -69,7 +83,7 @@ class Playlist {
         }
 
         this.curIdx--;
-        this.load(this.curVideo.id);
+        this.load(this.currentVideo().id);
         this.play();
     }
 
@@ -77,7 +91,6 @@ class Playlist {
         const idx = this.getData('id').indexOf(videoID);
         
         if (idx === -1) {
-            console.log(this.videos);
             console.log(videoID, "not in playlist");
             return;
         }
@@ -92,53 +105,34 @@ class Playlist {
     }
 
     play() {
-        const videoTitle = document.getElementById("video-title");
-        const videoChannel = document.getElementById("video-channel");
+        const videoTitle: HTMLElement | null = document.getElementById("video-title");
+        const videoChannel: HTMLElement | null = document.getElementById("video-channel");
 
-        const curVideo = this.curVideo;
-        const title = curVideo?.title;
-        const channel = curVideo?.channel;
+        const curVideo: VideoType = this.currentVideo();
+        const title: string = curVideo?.title;
+        const channel: string = curVideo?.channel;
 
-        if (videoTitle && videoChannel && title && channel) { 
-            videoChannel.textContent = channel
+        if (videoTitle && videoChannel && title && channel) {
+            videoChannel.textContent = channel;
             videoTitle.textContent = title;
             document.title = `${title} · ${channel}`;
         }
 
         player.playVideo();
     }
+
+    toVideoCards(className: string | undefined, showAll: boolean) {
+        return this.videos.slice(0, showAll ? undefined : 50)
+            .map((video: VideoType) => {
+                return <VideoCard 
+                    key={video.id}
+                    video={video}
+                    className={className}
+                    playlist={this} 
+                />
+            })
+    }
 }
-
-const global = {
-    curPlaylist: new Playlist()
-}
-
-function setCurPlaylist(pl: Playlist) {
-    global.curPlaylist = pl;
-}
-
-function getCurPlaylist() {
-    return global.curPlaylist;
-}
-
-
-
-// get allData() {
-//     var ids: string[] = [];
-//     var titles: string[] = [];
-//     var channels: string[] = [];
-//     var thumbnails: string[] = [];
-
-//     this.videos.forEach((vid: VideoType) => {
-//         ids.push(vid['id']);
-//         titles.push(vid['title']);
-//         channels.push(vid['channel']);
-//         thumbnails.push(vid['thumbnail']);
-//     })
-
-//     return [ids, titles, channels, thumbnails];
-// }
 
 export default Playlist;
 export type { VideoType };
-export { setCurPlaylist, getCurPlaylist };

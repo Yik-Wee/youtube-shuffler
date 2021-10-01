@@ -1,4 +1,4 @@
-import Playlist, { getCurPlaylist } from '../helpers/Playlist';
+import { store } from '../globalStateHandler/';
 
 declare global {
     interface Window {
@@ -20,6 +20,16 @@ type IFrameEvent = {
         playVideo: Function
     };
 };
+
+enum PlayerState {
+    UNSTARTED = -1,
+    ENDED,
+    PLAYING,
+    PAUSED,
+    BUFFERING,
+    VIDEO_CUED,
+}
+
 
 var player: any;
 
@@ -43,7 +53,28 @@ var player: any;
     }
 
     function onPlayerStateChange(event: IFrameEvent) {  // play next video when ended
-        if (event.data === 0) getCurPlaylist().playNext();
+        console.log({ data: event.data });
+
+        switch (event.data) {  //TODO
+            case PlayerState.ENDED:
+                store.state.playlist.playNext();
+                break;
+        
+            case PlayerState.PLAYING:
+                store.state.playlist.paused = false;
+                // console.log(document.getElementById('play-pause'))
+                // document.getElementById('play-pause')?.click();
+                break;
+            
+            case PlayerState.PAUSED:
+                store.state.playlist.paused = true;
+                // console.log(document.getElementById('play-pause'))
+                // document.getElementById('play-pause')?.click();
+                break;
+
+            default:
+                break;
+        }
     }
 })();
 

@@ -1,7 +1,7 @@
 # TODO
- - [ ] Search - only display title and owner of playlist (`<Paper />`); Route to `Queue` when clicked
- - [ ] Fix the `'Invalid Playlist ID'` message when searching for playlist
- - [ ] ***Do not add private or deleted videos*** to playlist
- - [ ] Use *this.state* for `playlist` using class (`React.Component`) instead of global vars?
- <!-- - [ ] shuffle button `onclick` -> go to `queue` page -> show queue (useState to rerender queue when shuffled) -->
- - [ ] Lazy load playlist (minimize heap size)
+- [x] use dynamic pages instead of queries (/playlist/:id instead of /playlist?id=...)
+- [x] VideoQueue line 71
+- [ ] Home ability to delete specific recently played from localStorage
+- [ ] Home line 54
+- [x] Home line 22
+- [ ] remove commented out code if it works

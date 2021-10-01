@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { createMuiTheme, CssBaseline, makeStyles, MenuItem, Paper, Switch, ThemeProvider, Button } from '@material-ui/core';
-import { SettingsRounded, LibraryMusicOutlined, QueueMusicRounded, NightsStayRounded, WbSunnyRounded } from '@material-ui/icons';
+import { makeStyles, MenuItem, Paper } from '@material-ui/core';
+import { HomeRounded, QueueMusicRounded, SettingsRounded } from '@material-ui/icons';
 import SearchPlaylist from './search';
 
 const useStyles = makeStyles({
@@ -43,10 +43,9 @@ const useStyles = makeStyles({
 
 interface NavBarProps {
     darkMode: boolean;
-    themeSetter: Function;
 }
 
-const NavBar: React.FC<NavBarProps> = ({ darkMode, themeSetter }) => {
+const NavBar: React.FC<NavBarProps> = ({ darkMode }) => {
     const classes = useStyles();
     const bgColor = darkMode ? "#181818" : "#8899A6";
 
@@ -55,19 +54,14 @@ const NavBar: React.FC<NavBarProps> = ({ darkMode, themeSetter }) => {
             <div className={classes.nav}>
                 <SearchPlaylist history={useHistory()} />
                 <div className={classes.items}>
-                    <MenuItem className={classes.item} component={Link} to="/saved-playlists">
-                        <LibraryMusicOutlined />
+                    <MenuItem className={classes.item} component={Link} to="/">
+                        <HomeRounded />
                     </MenuItem>
                     <MenuItem className={classes.item} component={Link} to="/queue">
                         <QueueMusicRounded />
                     </MenuItem>
-                    <MenuItem className={classes.item} onClick={() => {
-                        localStorage.setItem("appTheme", !darkMode ? "dark" : "light");
-                        themeSetter(!darkMode);
-                    }}>
-                        <Button>
-                            {darkMode ? <NightsStayRounded color="primary" /> : <WbSunnyRounded color="secondary" />}
-                        </Button>
+                    <MenuItem className={classes.item} component={Link} to="/settings">
+                        <SettingsRounded />
                     </MenuItem>
                 </div>
             </div>
