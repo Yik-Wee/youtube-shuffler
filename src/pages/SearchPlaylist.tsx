@@ -5,8 +5,8 @@ import { useHistory, useParams } from "react-router-dom";
 import { YouTube } from '@material-ui/icons';
 import { store } from '../components/globalStateHandler';
 
-function useClasses(darkMode: boolean) {
-    const useStyles = makeStyles({
+function useStyles(darkMode: boolean) {
+    const styles = makeStyles({
         root: {
             padding: '1rem',
             transition: 'background-color 200ms ease-in-out',
@@ -28,7 +28,7 @@ function useClasses(darkMode: boolean) {
             wordWrap: 'break-word',
         }
     });
-    return useStyles();
+    return styles();
 }
 
 interface SearchPlaylistProps {
@@ -44,13 +44,13 @@ type Info = {
 }
 
 const SearchPlaylist: React.FC<SearchPlaylistProps> = ({ darkMode }) => {
-    const classes = useClasses(darkMode);
+    const classes = useStyles(darkMode);
     const history = useHistory();
 
     const params: { id: string } = useParams();
     const playlistId = params.id;
 
-    const [info, setInfo] : [Info, Function] = useState({
+    const [info, setInfo]: [Info, Function] = useState({
         channel: '',
         title: '',
         thumbnail: undefined,
@@ -61,7 +61,6 @@ const SearchPlaylist: React.FC<SearchPlaylistProps> = ({ darkMode }) => {
     useEffect(() => {
         async function handleSearchedId() {
             try {
-                console.log('fetching playlist')
                 const [channel, title, thumbnail] = await getPlaylistMainInfo(playlistId);
                 setInfo({ ...{ channel, title, thumbnail }, loading: false, error: undefined });
             }
@@ -81,7 +80,7 @@ const SearchPlaylist: React.FC<SearchPlaylistProps> = ({ darkMode }) => {
             onClick={() => {
                 if (info.loading || info.error)
                     return;  // click does nothing if theres an error or is still loading
-                
+
                 store.setState({ ...store.state, id: playlistId });
                 history.push("/queue");
             }}

@@ -2,27 +2,14 @@ import React from 'react';
 import { Button, TextField } from '@material-ui/core';
 import { SearchRounded } from '@material-ui/icons';
 
-type SearchProps = {
+interface SearchProps {
     history: any;
-    // setSearched(searched: { id: string, ch: string, title: string, thumb: string | undefined }): void;
 }
 
 class Search extends React.Component<SearchProps, { value: string }> {
-    styles: any;
-
     constructor(props: SearchProps) {
         super(props);
         this.state = { value: '' };
-        this.styles = {
-            form: {
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-            },
-            label: {
-                width: '30vw',
-            },
-        }
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -32,68 +19,56 @@ class Search extends React.Component<SearchProps, { value: string }> {
         this.setState({ value: event.target.value });
     }
 
-    parseParams(paramString: string): string[] {
-        /**
-         * Convert paramString into token list
-         * @param paramString the part of url after the domain (e.g. 'playlist?list=...')
-         */
-        const DELIMITERS = '?&';
-        const chars = Array.from(paramString);
-        let buffer = '';
-        let params: string[] = [];
-
-        chars.forEach((c: string) => {
-            if (DELIMITERS.includes(c)) {
-                params.push(buffer);
-                buffer = '';
-            } else {
-                buffer += c;
-            }
-        });
-
-        params.push(buffer);
-        return params;
-    }
-
     handleSubmit(event: React.ChangeEvent<HTMLFormElement>) {
-        let id: string = this.state.value;
-
+        event.preventDefault();
+        
         // get id from url if url is passed
         // e.g. 'https://www.youtube.com/playlist?list=' or 'https://www.youtube.com/watch?v=OmuW_v5LoIU&list='
         const baseURL = 'https://www.youtube.com/';
-        if (this.state.value.startsWith(baseURL)) {
-            const paramString = this.state.value.substring(baseURL.length);
-            const params = this.parseParams(paramString);
-            console.log({ params });
+        let id = this.state.value.trim();
 
-            const paramType = 'list=';
+        if (id.startsWith(baseURL)) {
+            // get list= param from url string (playlist id)
+            const regexp = /[&?]list=([^&\s:/]+)/i;
+            const results = regexp.exec(id);
+            console.log(results)
+            
+            if (!results)
+                return
 
-            for (let p of params) {
-                if (p.startsWith(paramType)) {
-                    id = p.substring(paramType.length);
-                    break;
-                }
-            }
+            id = results[1].trim();
         }
+        
+        if (!id)
+            return
 
         this.props.history.push(`/playlist/${id}`);
-        event.preventDefault();
     }
 
     render() {
+        const styles = {
+            form: {
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+            },
+            label: {
+                width: '30vw',
+            },
+        };
+
         return (
-            <form onSubmit={this.handleSubmit} style={this.styles.form}>
+            <form onSubmit={this.handleSubmit} style={styles.form}>
                 <label>
                     <TextField
-                        // id="standard-basic" 
                         id="search"
-                        label="Playlist ID" 
+                        label="Playlist ID"
                         onChange={this.handleChange}
                         color='primary'
-                        style={this.styles.label}
+                        style={styles.label}
                     ></TextField>
                 </label>
-                <Button type="submit" color='primary'><SearchRounded/></Button>
+                <Button type="submit" color='primary'><SearchRounded /></Button>
             </form>
         );
     }

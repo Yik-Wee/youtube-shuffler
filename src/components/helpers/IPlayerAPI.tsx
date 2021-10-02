@@ -12,7 +12,7 @@ type Properties = {
     fov: number;
 }
 
-type Player = {
+interface Player {
     cueVideoById(videoId: string, startSeconds?: number): void;
     loadVideoById(videoId: string, startSeconds?: number): void;
     cueVideoByUrl(mediaContentUrl: string, startSeconds?: number): void;
@@ -59,7 +59,7 @@ type Player = {
     destroy(): void;
 }
 
-type PlayerEvent = {
+interface PlayerEvent {
     data: number;
     target: Player;
 };

@@ -56,7 +56,6 @@ const useStyles = makeStyles({
 const NowPlayingBar: React.FC = () => {
     const classes = useStyles();
     const defaultVideoID = localStorage.getItem('mostRecentVideo') || 'dQw4w9WgXcQ';
-    console.log(document.domain);
 
     return (
         <div className={classes.root}>
@@ -75,7 +74,7 @@ const NowPlayingBar: React.FC = () => {
                     className={classes.iframe}
                     title="YouTube Player"
                     id="player"
-                    src={`https://www.youtube.com/embed/${defaultVideoID}?enablejsapi=1&widgetid=1`}
+                    src={`https://www.youtube.com/embed/${defaultVideoID}?enablejsapi=1&widgetid=1&origin=${window.origin}`}
                 ></iframe>
             </Paper>
         </div>

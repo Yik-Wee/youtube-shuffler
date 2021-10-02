@@ -14,8 +14,8 @@ class App extends React.Component<{}, AppStateProps> {
     constructor(props: any) {
         super(props);
 
-        this.state = {
-            darkMode: localStorage.getItem("appTheme")?.toLowerCase() === "dark",
+        this.state = {  // default to dark theme
+            darkMode: localStorage.getItem("appTheme")?.toLowerCase().trim() !== "light",
         }
     }
 

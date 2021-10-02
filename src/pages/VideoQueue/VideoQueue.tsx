@@ -12,6 +12,9 @@ const useStyles = makeStyles({
         justifyContent: 'center',
         paddingTop: '35vh',
     },
+    body: {
+        padding: '1rem',
+    },
 });
 
 interface VideoQueueProps {
@@ -44,7 +47,7 @@ const VideoQueue: React.FC<VideoQueueProps> = ({ darkMode }) => {
         async function handleId() {
             if (store.state.id === store.state.playlist.id || !store.state.id)
                 return setLoading(false);
-            
+
             try {
                 store.setState({ ...store.state, playlist: await getPlaylist(store.state.id) });
                 addToRecents(store.state.id);
@@ -52,7 +55,7 @@ const VideoQueue: React.FC<VideoQueueProps> = ({ darkMode }) => {
             catch (err) {
                 console.warn(err);
             }
-            
+
             setLoading(false);
         }
 
@@ -63,13 +66,15 @@ const VideoQueue: React.FC<VideoQueueProps> = ({ darkMode }) => {
 
     return (
         <div className={classes.root}>
-            <Paper style={{ padding: '1rem' }}>
+            <Paper className={classes.body}>
                 <Typography variant="h3" style={{ overflowX: 'scroll' }}>Queue</Typography>
                 {loading ? <LoadingBar /> : (
-                    noPlaylist ? 
-                        <Typography variant="overline">No playlist yet! Search for a playlist to get started!</Typography> : 
+                    noPlaylist ?
+                        <Typography variant="overline">
+                            No playlist yet! Search for a playlist to get started!
+                        </Typography> :
                         <HeaderWithBody darkMode={darkMode} />
-                    )
+                )
                 }
             </Paper>
         </div>

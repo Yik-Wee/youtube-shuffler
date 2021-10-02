@@ -20,7 +20,7 @@ interface Store extends GlobalStore {
     readonly _state: State;
 
     /**
-     * Returns the immutable state of Global Storage `store`
+     * The immutable state of Global Storage `store`
      */
     state: State;
 
