@@ -21,13 +21,11 @@ class Search extends React.Component<SearchProps, { value: string }> {
 
     handleSubmit(event: React.ChangeEvent<HTMLFormElement>) {
         event.preventDefault();
+        let id = this.state.value.trim();
         
         // get id from url if url is passed
         // e.g. 'https://www.youtube.com/playlist?list=' or 'https://www.youtube.com/watch?v=OmuW_v5LoIU&list='
-        const baseURL = 'https://www.youtube.com/';
-        let id = this.state.value.trim();
-
-        if (id.startsWith(baseURL)) {
+        if (id.startsWith('https://www.youtube.com/') || id.startsWith('https://youtube.com/')) {
             // get list= param from url string (playlist id)
             const regexp = /[&?]list=([^&\s:/]+)/i;
             const results = regexp.exec(id);
