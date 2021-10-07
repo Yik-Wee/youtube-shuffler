@@ -17,7 +17,7 @@ const PageNotFound: React.FC = () => {
             <Paper style={{ padding: '1rem' }}>
                 <Typography variant="h2">Page Not Found</Typography>
                 <Typography variant="overline">It looks like this page doesn't exist!</Typography>
-                <div style={{ height: 'inherit', whiteSpace: 'pre' }}>
+                <div style={{ height: 'inherit', whiteSpace: 'pre', overflowX: 'scroll' }}>
                     {`
 ⣿⣿⣿⣿⣿⣿⣿⣿⠿⠛⠋⠉⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠛⠿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⠏⠀⢠⣦⡀⣤⣠⡄⢠⠦⡄⣠⠤⠀⣤⠀⡆⣤⣶⡀⠀⠈⠻⣿
