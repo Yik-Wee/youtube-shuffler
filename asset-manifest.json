@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/youtube-shuffler/static/css/main.205a3e32.chunk.css",
-    "main.js": "/youtube-shuffler/static/js/main.0c776165.chunk.js",
+    "main.js": "/youtube-shuffler/static/js/main.94d66377.chunk.js",
     "runtime-main.js": "/youtube-shuffler/static/js/runtime-main.0eda764d.js",
     "static/js/2.5573b9ec.chunk.js": "/youtube-shuffler/static/js/2.5573b9ec.chunk.js",
     "index.html": "/youtube-shuffler/index.html",
@@ -11,6 +11,6 @@
     "static/js/runtime-main.0eda764d.js",
     "static/js/2.5573b9ec.chunk.js",
     "static/css/main.205a3e32.chunk.css",
-    "static/js/main.0c776165.chunk.js"
+    "static/js/main.94d66377.chunk.js"
   ]
 }
