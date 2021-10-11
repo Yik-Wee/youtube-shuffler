@@ -37,7 +37,7 @@ function onPlayerStateChange(event: PlayerEvent) {  // play next video when ende
     const currentVideo = store.state.playlist.currentVideo();
 
     switch (event.data) {
-        case PlayerState.BUFFERING:  // video starting, change channel & title accordingly
+        case PlayerState.UNSTARTED:  // video starting, change channel & title accordingly
             document.getElementById('video-channel')!.textContent = currentVideo.channel;
             document.getElementById('video-title')!.textContent = currentVideo.title;
             break;
