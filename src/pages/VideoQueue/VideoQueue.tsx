@@ -34,7 +34,7 @@ function addToRecents(id: string) {
         return
 
     if (recentIds.length > maxLength)
-        recentIds.pop();
+        recentIds = recentIds.slice(0, maxLength);
 
     localStorage.setItem('recents', `${id},${recentIds.join(',')}`);
 }
