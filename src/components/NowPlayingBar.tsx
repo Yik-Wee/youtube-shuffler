@@ -44,19 +44,25 @@ const useStyles = makeStyles({
         alignItems: 'flex-end',
         width: '40%'
     },
-    iframe: {
+});
+
+const defaultVideoID = localStorage.getItem('mostRecentVideo') || 'dQw4w9WgXcQ';
+
+const playerIframe = <iframe
+    style={{
         position: 'relative',
         zIndex: 1,
         border: 0,
         width: "45%",
         height: "90%"
-    }
-});
+    }}
+    title="YouTube Player"
+    id="player"
+    src={`https://www.youtube.com/embed/${defaultVideoID}?enablejsapi=1&widgetid=1&origin=${window.origin}`}
+></iframe>
 
-// ! ISSUE iframe rerendering breaks player API in production
 const NowPlayingBar: React.FC = () => {
     const classes = useStyles();
-    const defaultVideoID = localStorage.getItem('mostRecentVideo') || 'dQw4w9WgXcQ';
 
     return (
         <div className={classes.root}>
@@ -70,13 +76,7 @@ const NowPlayingBar: React.FC = () => {
                         <NextButton />
                     </Paper>
                 </div>
-
-                <iframe 
-                    className={classes.iframe}
-                    title="YouTube Player"
-                    id="player"
-                    src={`https://www.youtube.com/embed/${defaultVideoID}?enablejsapi=1&widgetid=1&origin=${window.origin}`}
-                ></iframe>
+                { playerIframe }
             </Paper>
         </div>
     );
