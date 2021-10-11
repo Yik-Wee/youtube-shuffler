@@ -53,6 +53,7 @@ const useStyles = makeStyles({
     }
 });
 
+// ! ISSUE iframe rerendering breaks player API in production
 const NowPlayingBar: React.FC = () => {
     const classes = useStyles();
     const defaultVideoID = localStorage.getItem('mostRecentVideo') || 'dQw4w9WgXcQ';

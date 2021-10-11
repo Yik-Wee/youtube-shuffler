@@ -34,14 +34,20 @@ function onPlayerError(event: PlayerEvent) {
 }
 
 function onPlayerStateChange(event: PlayerEvent) {  // play next video when ended
+    const currentVideo = store.state.playlist.currentVideo();
+
     switch (event.data) {
+        case PlayerState.BUFFERING:  // video starting, change channel & title accordingly
+            document.getElementById('video-channel')!.textContent = currentVideo.channel;
+            document.getElementById('video-title')!.textContent = currentVideo.title;
+            break;
+
         case PlayerState.ENDED:  // current video ended, play next video in playlist
             store.state.playlist.playNext();
             break;
 
         case PlayerState.PLAYING:
             store.state.playlist.paused = false;
-            const currentVideo = store.state.playlist.currentVideo();
             
             if (currentVideo.title && currentVideo.channel)
                 document.title = `${currentVideo.title} · ${currentVideo.channel}`;

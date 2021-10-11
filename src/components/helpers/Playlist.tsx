@@ -84,10 +84,6 @@ class Playlist {
 
         if (idx === -1)  // video with id of `videoID` doesn't exist
             return
-        
-        const currentVideo = this.currentVideo();
-        document.getElementById('video-channel')!.textContent = currentVideo.channel;
-        document.getElementById('video-title')!.textContent = currentVideo.title;
 
         this.curIdx = idx;
         player.loadVideoById(videoID);
