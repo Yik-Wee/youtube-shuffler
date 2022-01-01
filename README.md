@@ -9,26 +9,22 @@
 
 ## Running it locally
 1. Install TypeScript (and node) if you haven't already
-2. Change directory into whichever directory you will clone the repo to
+2. Clone the repo
     ```sh
-    mkdir youtube-shuffler
-    cd ./youtube-shuffler
+    git clone https://github.com/Yik-Wee/youtube-shuffler.git
     ```
-3. Clone the repo
-    ```sh
-    git clone https://github.com/Yik-Wee/youtube-shuffler.git .
-    ```
-4. Run `npm install` to install all required packages from `package.json`
+3. Run `npm install` to install all required packages from `package.json`
     ```sh
     npm install
     ```
-5. Add a `.env` file in the root folder and set `REACT_ENV_API_KEY` to your [YouTube API key](https://developers.google.com/youtube/v3/getting-started)
+4. Add a `.env` file in the root folder and set `REACT_ENV_API_KEY` to your [YouTube API key](https://developers.google.com/youtube/v3/getting-started)
    - `.env`:
         ```.env
         REACT_APP_API_KEY=<API_KEY>
         ```
-6. run `npm start` to start the server
+5. run `npm start` to start the server
     ```sh
     npm start
     ```
-### And you're done. Now you can shuffle & spaghettify your playlists locally, just like what i've done to my code :moyai:
+
+## 🗿
