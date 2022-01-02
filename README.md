@@ -12,6 +12,7 @@
 2. Clone the repo
     ```sh
     git clone https://github.com/Yik-Wee/youtube-shuffler.git
+    cd ./youtube-shuffler
     ```
 3. Run `npm install` to install all required packages from `package.json`
     ```sh
